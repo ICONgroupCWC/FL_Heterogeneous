@@ -101,8 +101,18 @@ class variable_irm_game_model:
                 optimizer_list[countp].apply_gradients(zip(grads_list[countp], model_list[countp].trainable_variables))
 
                 # computing training accuracy
-                x_in = datat_list[n_e-1][0] 
-                y_in = datat_list[n_e-1][1]
+                
+                x_in = data_tuple_list[0][0]
+                for i in range(1,n_e):
+                    x_c = data_tuple_list[i][0]
+                    x_in = np.concatenate((x_in, x_c), axis=0)
+                y_in = data_tuple_list[0][1]
+                for i in range(1,n_e):
+                    y_c = data_tuple_list[i][1]
+                    y_in = np.concatenate((y_in, y_c), axis=0)
+                
+#                 x_in = datat_list[n_e-1][0] 
+#                 y_in = datat_list[n_e-1][1]
                 y_ = tf.zeros_like(y_in, dtype=tf.float32)
                 z_in = model_list[n_e-1](x_in)
                 for e in range(n_e-1):
@@ -120,6 +130,12 @@ class variable_irm_game_model:
                 self.train_accuracy_results = train_accuracy_results_0
             if (flag == 'true'):
                 break
+        
+        for e in range(n_e):
+            if(e<n_e-1): 
+                model_list[e].save('./models/pred_model_env'+str(e+1))
+            else:
+                model_list[e].save('./models/rep_model')
                 
         self.model_list = model_list 
         
@@ -154,11 +170,16 @@ class variable_irm_game_model:
         yts_ = tf.zeros_like(y_test, dtype=tf.float32)
         for e in range(n_e):
             yts_ = yts_ + model_list[e](z_test) 
-
+        
         test_acc  =  float(test_accuracy(y_test, yts_))
         
         self.train_acc = train_acc
         self.test_acc  = test_acc
+        
+        self.ypred = np.argmax(yts_, axis=1)
+        self.y_test = y_test
+        
+        
 
 
 
