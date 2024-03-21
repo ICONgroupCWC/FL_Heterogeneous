@@ -8,6 +8,7 @@ Follow the Jupyter Notebook Trial.ipynb
 1. Tensorflow
 2. Keras
 3. sklearn
+4. seaborn
 
 
 
