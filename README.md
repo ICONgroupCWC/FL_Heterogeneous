@@ -10,5 +10,7 @@ Follow the Jupyter Notebook Trial.ipynb
 3. sklearn
 4. seaborn
 
+For time comparison between FedAvg and the algorithm mentioned above, run the `time_comparison.py` file.
+
 
 
